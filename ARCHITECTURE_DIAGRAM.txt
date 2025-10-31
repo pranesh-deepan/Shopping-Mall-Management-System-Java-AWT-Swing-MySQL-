@@ -1,0 +1,378 @@
+================================================================================
+    SHOPPING MALL MANAGEMENT SYSTEM - ARCHITECTURE DIAGRAM
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          APPLICATION ENTRY POINT                             │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │                     ShoppingMallApp.java                            │    │
+│  │  • main() method                                                    │    │
+│  │  • Splash screen display                                            │    │
+│  │  • Controller initialization                                        │    │
+│  │  • Main window launch                                               │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            CONTROLLER LAYER                                  │
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────┐    │
+│  │                     ShopController.java                             │    │
+│  │  • addShop(Shop)                                                    │    │
+│  │  • getAllShops()                                                    │    │
+│  │  • getShopById(int)                                                 │    │
+│  │  • updateShop(Shop)                                                 │    │
+│  │  • deleteShop(int)                                                  │    │
+│  │  • validateShop(Shop)                                               │    │
+│  │  • Business logic & validation                                      │    │
+│  └────────────────────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────────────────────┘
+                    │                                      │
+                    │                                      │
+        ┌───────────▼──────────┐              ┌──────────▼───────────┐
+        │                      │              │                      │
+        │    VIEW LAYER        │              │    MODEL LAYER       │
+        │                      │              │                      │
+        └──────────────────────┘              └──────────────────────┘
+
+================================================================================
+                              VIEW LAYER (GUI)
+================================================================================
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│                           MainWindow.java                                   │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │                  SHOPPING MALL MANAGEMENT SYSTEM                      │  │
+│  │                                                                       │  │
+│  │              Welcome to Shopping Mall Management System              │  │
+│  │                                                                       │  │
+│  │              • Manage shop details efficiently                       │  │
+│  │              • Add, Update, Delete shop records                      │  │
+│  │              • View all shops in organized table                     │  │
+│  │              • Track rent and contact information                    │  │
+│  │                                                                       │  │
+│  │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │  │
+│  │  │ Manage Shops │  │ View Shops   │  │    Exit      │              │  │
+│  │  └──────────────┘  └──────────────┘  └──────────────┘              │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+           │                                    │
+           │                                    │
+           ▼                                    ▼
+┌─────────────────────────────┐    ┌──────────────────────────────┐
+│  ShopManagementWindow.java  │    │   ViewShopsWindow.java       │
+│  ┌───────────────────────┐  │    │  ┌────────────────────────┐  │
+│  │   SHOP MANAGEMENT     │  │    │  │   ALL SHOPS IN MALL    │  │
+│  ├───────────────────────┤  │    │  ├────────────────────────┤  │
+│  │ Shop ID:       [____] │  │    │  │ ┌────────────────────┐ │  │
+│  │ Shop Name:     [____] │  │    │  │ │  JTable Display    │ │  │
+│  │ Owner Name:    [____] │  │    │  │ │  ID | Name | Owner │ │  │
+│  │ Contact:       [____] │  │    │  │ │  1  | Shop1| John  │ │  │
+│  │ Category:      [▼___] │  │    │  │ │  2  | Shop2| Jane  │ │  │
+│  │ Rent Amount:   [____] │  │    │  │ │  3  | Shop3| Mike  │ │  │
+│  │                       │  │    │  │ └────────────────────┘ │  │
+│  │ [Add] [Update] [Del]  │  │    │  │ Total Shops: 3         │  │
+│  │ [Search] [Clear][Close]│ │    │  │ [Refresh]    [Close]   │  │
+│  └───────────────────────┘  │    │  └────────────────────────┘  │
+└─────────────────────────────┘    └──────────────────────────────┘
+
+================================================================================
+                              MODEL LAYER (Data)
+================================================================================
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│                              Shop.java                                      │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Entity Class (POJO)                                                  │  │
+│  │  ─────────────────────                                                │  │
+│  │  - int shopId                                                         │  │
+│  │  - String shopName                                                    │  │
+│  │  - String ownerName                                                   │  │
+│  │  - String contactNumber                                               │  │
+│  │  - String shopCategory                                                │  │
+│  │  - double rentAmount                                                  │  │
+│  │                                                                       │  │
+│  │  + Constructors                                                       │  │
+│  │  + Getters / Setters                                                  │  │
+│  │  + toString()                                                         │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ▼
+┌────────────────────────────────────────────────────────────────────────────┐
+│                         DatabaseHandler.java                                │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Data Access Object (DAO)                                             │  │
+│  │  ────────────────────────                                             │  │
+│  │  - Connection connection                                              │  │
+│  │  - DB_URL, DB_USER, DB_PASSWORD                                       │  │
+│  │                                                                       │  │
+│  │  + DatabaseHandler()              // Constructor                     │  │
+│  │  + addShop(Shop): boolean         // CREATE                          │  │
+│  │  + getAllShops(): List<Shop>      // READ                            │  │
+│  │  + getShopById(int): Shop         // READ                            │  │
+│  │  + updateShop(Shop): boolean      // UPDATE                          │  │
+│  │  + deleteShop(int): boolean       // DELETE                          │  │
+│  │  + searchShopsByCategory(String): List<Shop>                         │  │
+│  │  + closeConnection()                                                  │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+                                      │
+                                      ▼
+================================================================================
+                           DATABASE LAYER (MySQL)
+================================================================================
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│                         MySQL Database Server                               │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │  Database: shopping_mall_db                                           │  │
+│  │  ───────────────────────────                                          │  │
+│  │                                                                       │  │
+│  │  Table: shops                                                         │  │
+│  │  ┌────────────────────────────────────────────────────────────────┐  │  │
+│  │  │ Column Name      │ Type          │ Constraints                 │  │  │
+│  │  ├──────────────────┼───────────────┼─────────────────────────────┤  │  │
+│  │  │ shop_id          │ INT           │ PRIMARY KEY, AUTO_INCREMENT │  │  │
+│  │  │ shop_name        │ VARCHAR(100)  │ NOT NULL                    │  │  │
+│  │  │ owner_name       │ VARCHAR(100)  │ NOT NULL                    │  │  │
+│  │  │ contact_number   │ VARCHAR(15)   │ NOT NULL                    │  │  │
+│  │  │ shop_category    │ VARCHAR(50)   │ NOT NULL                    │  │  │
+│  │  │ rent_amount      │ DECIMAL(10,2) │ NOT NULL                    │  │  │
+│  │  │ created_at       │ TIMESTAMP     │ DEFAULT CURRENT_TIMESTAMP   │  │  │
+│  │  │ updated_at       │ TIMESTAMP     │ ON UPDATE CURRENT_TIMESTAMP │  │  │
+│  │  └────────────────────────────────────────────────────────────────┘  │  │
+│  └──────────────────────────────────────────────────────────────────────┘  │
+└────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+                            DATA FLOW DIAGRAM
+================================================================================
+
+ADD SHOP OPERATION:
+───────────────────
+
+User Input (GUI)
+      │
+      ▼
+[ShopManagementWindow] ──► Fill form fields
+      │
+      ▼
+Click "Add Shop" button
+      │
+      ▼
+[ShopController] ──► validateShop(shop)
+      │                    │
+      │                    ├─► Check shop name
+      │                    ├─► Check owner name
+      │                    ├─► Validate contact (10 digits)
+      │                    ├─► Check category
+      │                    └─► Validate rent amount > 0
+      │
+      ▼
+[DatabaseHandler] ──► addShop(shop)
+      │                    │
+      │                    ├─► Prepare SQL INSERT statement
+      │                    ├─► Set parameters
+      │                    └─► Execute query
+      │
+      ▼
+[MySQL Database] ──► INSERT INTO shops VALUES (...)
+      │
+      ▼
+Success/Failure Response
+      │
+      ▼
+[ShopManagementWindow] ──► Display success/error message
+      │
+      ▼
+Clear form fields (on success)
+
+
+VIEW SHOPS OPERATION:
+─────────────────────
+
+User Action
+      │
+      ▼
+Click "View All Shops" button
+      │
+      ▼
+[MainWindow] ──► Open ViewShopsWindow
+      │
+      ▼
+[ViewShopsWindow] ──► loadShopData()
+      │
+      ▼
+[ShopController] ──► getAllShops()
+      │
+      ▼
+[DatabaseHandler] ──► getAllShops()
+      │                    │
+      │                    ├─► Execute SELECT * FROM shops
+      │                    ├─► Iterate ResultSet
+      │                    └─► Create Shop objects
+      │
+      ▼
+[MySQL Database] ──► Return all shop records
+      │
+      ▼
+List<Shop> returned to View
+      │
+      ▼
+[ViewShopsWindow] ──► Populate JTable with data
+      │
+      ▼
+Display table to user
+
+
+UPDATE SHOP OPERATION:
+──────────────────────
+
+User Input
+      │
+      ▼
+Enter Shop ID → Click "Search by ID"
+      │
+      ▼
+[ShopController] ──► getShopById(id)
+      │
+      ▼
+[DatabaseHandler] ──► SELECT * FROM shops WHERE shop_id = ?
+      │
+      ▼
+Populate form with shop data
+      │
+      ▼
+User modifies fields
+      │
+      ▼
+Click "Update Shop" → Confirmation dialog
+      │
+      ▼
+[ShopController] ──► validateShop(shop)
+      │
+      ▼
+[DatabaseHandler] ──► updateShop(shop)
+      │                    │
+      │                    └─► UPDATE shops SET ... WHERE shop_id = ?
+      │
+      ▼
+Success/Error message displayed
+
+
+DELETE SHOP OPERATION:
+──────────────────────
+
+User Input
+      │
+      ▼
+Enter Shop ID → Click "Delete Shop"
+      │
+      ▼
+Confirmation dialog (Are you sure?)
+      │
+      ▼
+[ShopController] ──► deleteShop(id)
+      │
+      ▼
+[DatabaseHandler] ──► deleteShop(id)
+      │                    │
+      │                    └─► DELETE FROM shops WHERE shop_id = ?
+      │
+      ▼
+Success/Error message displayed
+
+================================================================================
+                         COMPONENT INTERACTION
+================================================================================
+
+┌──────────────┐         ┌──────────────┐         ┌──────────────┐
+│              │         │              │         │              │
+│     VIEW     │◄───────►│  CONTROLLER  │◄───────►│    MODEL     │
+│              │         │              │         │              │
+└──────────────┘         └──────────────┘         └──────────────┘
+      │                         │                         │
+      │                         │                         │
+      ▼                         ▼                         ▼
+• User Interface        • Business Logic         • Data Access
+• Input Forms           • Validation             • Database Ops
+• Display Data          • Coordination           • Entity Classes
+• Buttons/Events        • Error Handling         • JDBC Connection
+
+================================================================================
+                            FILE DEPENDENCIES
+================================================================================
+
+ShoppingMallApp.java
+    └─► ShopController.java
+            ├─► DatabaseHandler.java
+            │       └─► Shop.java
+            └─► MainWindow.java
+                    ├─► ShopManagementWindow.java
+                    │       └─► ShopController.java
+                    └─► ViewShopsWindow.java
+                            └─► ShopController.java
+
+================================================================================
+                         TECHNOLOGY STACK LAYERS
+================================================================================
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│  Presentation Layer:  Java AWT + Swing (Frame, Button, JTable, etc.)       │
+├────────────────────────────────────────────────────────────────────────────┤
+│  Business Layer:      ShopController (Validation, Business Rules)          │
+├────────────────────────────────────────────────────────────────────────────┤
+│  Data Access Layer:   DatabaseHandler (JDBC, SQL Operations)               │
+├────────────────────────────────────────────────────────────────────────────┤
+│  Database Layer:      MySQL Server (shopping_mall_db)                      │
+└────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+                           DESIGN PATTERNS USED
+================================================================================
+
+1. MVC (Model-View-Controller)
+   • Model: Shop.java, DatabaseHandler.java
+   • View: MainWindow.java, ShopManagementWindow.java, ViewShopsWindow.java
+   • Controller: ShopController.java
+
+2. DAO (Data Access Object)
+   • DatabaseHandler.java encapsulates all database operations
+
+3. Singleton Pattern (Implicit)
+   • Single DatabaseHandler instance per controller
+
+4. Factory Pattern (Implicit)
+   • Window creation in MainWindow
+
+================================================================================
+                              EXECUTION FLOW
+================================================================================
+
+1. Application Startup
+   ├─► Load MySQL JDBC Driver
+   ├─► Display Splash Screen
+   ├─► Initialize ShopController
+   ├─► Connect to Database
+   └─► Show MainWindow
+
+2. User Interaction
+   ├─► Click "Manage Shops" → Open ShopManagementWindow
+   ├─► Click "View All Shops" → Open ViewShopsWindow
+   └─► Click "Exit" → Close Database → Exit Application
+
+3. CRUD Operations
+   ├─► User Input → Controller Validation → Database Operation → Response
+   └─► Success/Error Message → Update UI
+
+4. Application Shutdown
+   ├─► Close all windows
+   ├─► Close database connection
+   └─► Exit JVM
+
+================================================================================
+                                 END
+================================================================================
